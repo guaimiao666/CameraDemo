@@ -8,6 +8,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
 
+import com.example.camerademo.MyApplication;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class Camera1Manager {
 
     private final String TAG = getClass().getSimpleName();
     private static Context mContext;
+    private static MyApplication application;
     private int cameraId;
     private Camera mCamera;
 
@@ -26,6 +28,7 @@ public class Camera1Manager {
 
     public static Camera1Manager getInstance(Context context) {
         mContext = context;
+        application = (MyApplication) context.getApplicationContext();
         return Single.INSTANCE;
     }
 
@@ -34,9 +37,11 @@ public class Camera1Manager {
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
             Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK
+                    && cameraInfo.facing == application.getCameraIndex()) {
                 return Camera.CameraInfo.CAMERA_FACING_BACK;
-            } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+                    && cameraInfo.facing == application.getCameraIndex()) {
                 return Camera.CameraInfo.CAMERA_FACING_FRONT;
             }
         }

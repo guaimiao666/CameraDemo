@@ -3,4 +3,6 @@
     <string name="preview_activity">预览界面</string>
     <string name="camera1">Camera1</string>
     <string name="camera2">Camera2</string>
+    <string name="frontCamera">前置摄像头</string>
+    <string name="rearCamera">后置摄像头</string>
 </resources>

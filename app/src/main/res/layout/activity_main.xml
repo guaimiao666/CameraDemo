@@ -9,7 +9,7 @@
     tools:context=".activity.MainActivity">
 
     <RadioGroup
-        android:id="@+id/main_activity_camera_mode_group"
+        android:id="@+id/main_activity_camera_api_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -19,14 +19,41 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/camera1" />
+            android:text="@string/camera1"
+            android:textSize="14sp"/>
 
         <RadioButton
             android:id="@+id/main_activity_camera2_radio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/camera2" />
+            android:text="@string/camera2"
+            android:textSize="14sp"/>
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/main_activity_camera_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/main_activity_camera_api_group">
+
+        <RadioButton
+            android:id="@+id/main_activity_rear_camera_radio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rearCamera"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/main_activity_front_camera_radio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/frontCamera"
+            android:textSize="14sp" />
 
     </RadioGroup>
 
@@ -35,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_below="@id/main_activity_camera_mode_group"
+        android:layout_below="@id/main_activity_camera_group"
         android:text="@string/preview_activity"
         android:textSize="14sp" />
 

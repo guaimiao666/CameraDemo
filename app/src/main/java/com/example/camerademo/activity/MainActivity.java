@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final String TAG = getClass().getSimpleName();
     private Button camera1Btn;
-    private RadioGroup cameraModeGroup;
+    private RadioGroup cameraApiGroup, cameraGroup;
     private final String[] permissions = {
         Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         camera1Btn = findViewById(R.id.jump_camera1_btn);
-        cameraModeGroup = findViewById(R.id.main_activity_camera_mode_group);
+        cameraApiGroup = findViewById(R.id.main_activity_camera_api_group);
+        cameraGroup = findViewById(R.id.main_activity_camera_group);
     }
 
     private void initData() {
@@ -67,13 +68,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(intent, 1024);
             }
         }
-        cameraModeGroup.check(application.getCameraMode() == 0
+        cameraApiGroup.check(application.getCameraMode() == 0
                 ? R.id.main_activity_camera1_radio : R.id.main_activity_camera2_radio);
+        cameraGroup.check(application.getCameraIndex() == 0
+                ? R.id.main_activity_rear_camera_radio : R.id.main_activity_front_camera_radio);
     }
 
     private void initAction() {
         camera1Btn.setOnClickListener(this);
-        cameraModeGroup.setOnCheckedChangeListener(this);
+        cameraApiGroup.setOnCheckedChangeListener(this);
+        cameraGroup.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -127,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             application.setCameraMode(0);
         } else if (i == R.id.main_activity_camera2_radio) {
             application.setCameraMode(1);
+        } else if (i == R.id.main_activity_rear_camera_radio) {
+            application.setCameraIndex(0);
+        } else if (i == R.id.main_activity_front_camera_radio) {
+            application.setCameraIndex(1);
         }
     }
 }
