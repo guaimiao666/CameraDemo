@@ -2,6 +2,9 @@ package com.example.camerademo;
 
 import android.app.Application;
 
+import com.example.camerademo.camera.Camera1Manager;
+import com.example.camerademo.camera.Camera2Manager;
+
 public class MyApplication extends Application {
 
     private int cameraMode; //使用camera1还是camera2 0：camera1 1：camera2
@@ -10,6 +13,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Camera1Manager.getInstance().init(this);
+        Camera2Manager.getInstance().init(this);
     }
 
     public int getCameraMode() {

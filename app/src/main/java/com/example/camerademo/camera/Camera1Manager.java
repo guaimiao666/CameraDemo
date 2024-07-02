@@ -3,33 +3,42 @@ package com.example.camerademo.camera;
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
 
 import com.example.camerademo.MyApplication;
+import com.example.camerademo.utils.Utils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 public class Camera1Manager {
 
     private final String TAG = getClass().getSimpleName();
-    private static Context mContext;
-    private static MyApplication application;
+    private Context mContext;
+    private MyApplication application;
     private int cameraId;
     private Camera mCamera;
+    private List<Camera.Size> supportedPreviewSizes;
+    private List<Camera.Size> supportedPictureSizes;
+    private List<String> supportedFocusModes;
 
     private static class Single {
         private static final Camera1Manager INSTANCE = new Camera1Manager();
     }
 
-    public static Camera1Manager getInstance(Context context) {
-        mContext = context;
-        application = (MyApplication) context.getApplicationContext();
+    public static Camera1Manager getInstance() {
         return Single.INSTANCE;
+    }
+
+    public void init(Context context) {
+        this.mContext = context;
+        this.application = (MyApplication) context.getApplicationContext();
     }
 
     public int getCameraId() {
@@ -66,11 +75,11 @@ public class Camera1Manager {
             setCameraDisplayOrientation();
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setPreviewFormat(ImageFormat.NV21);
-            List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
+            supportedPreviewSizes = parameters.getSupportedPreviewSizes();
             Log.d(TAG, "supportedPreviewSizes:" + new Gson().toJson(supportedPreviewSizes));
-            List<Camera.Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
+            supportedPictureSizes = parameters.getSupportedPictureSizes();
             Log.d(TAG, "supportedPictureSizes:" + new Gson().toJson(supportedPictureSizes));
-            List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+            supportedFocusModes = parameters.getSupportedFocusModes();
             Log.d(TAG, "supportedFocusModes:" + new Gson().toJson(supportedFocusModes));
             if (!supportedPreviewSizes.isEmpty()) {
                 parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
@@ -88,7 +97,7 @@ public class Camera1Manager {
         }
     }
 
-    public void release() {
+    public void releaseCamera() {
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.release();
@@ -132,21 +141,21 @@ public class Camera1Manager {
     public void takePicture() {
         if (mCamera == null)
             return;
-        mCamera.takePicture(new Camera.ShutterCallback() {
-            @Override
-            public void onShutter() {
-
-            }
-        }, new Camera.PictureCallback() {
-            @Override
-            public void onPictureTaken(byte[] bytes, Camera camera) {
-
-            }
-        }, new Camera.PictureCallback() {
-            @Override
-            public void onPictureTaken(byte[] bytes, Camera camera) {
-
-            }
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setPictureFormat(ImageFormat.JPEG);
+        parameters.set("jpeg-quality", 100);
+        String mode = parameters.get("cap-mode");
+        if (mode != null)
+            parameters.set("cap-mode", "normal");
+        parameters.setPictureSize(supportedPictureSizes.get(0).width, supportedPictureSizes.get(0).height);
+        mCamera.setParameters(parameters);
+        mCamera.takePicture(null, null, (bytes, camera) -> {
+            //拍照后回复预览
+            mCamera.startPreview();
+            //获取格式化后的日期 当做文件后缀
+            String dateStr = Utils.formatDate(new Date());
+            //保存图片数据到文件
+            Utils.savePicture(dateStr, bytes);
         });
     }
 }
