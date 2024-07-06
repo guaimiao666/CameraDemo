@@ -25,6 +25,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.camerademo.MyApplication;
 import com.example.camerademo.R;
+import com.example.camerademo.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String[] permissions = {
         Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private List<String> requestPermissions = new ArrayList<>();
     private MyApplication application;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +98,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void checkAndRequestPermissions() {
         for (int i = 0; i < permissions.length; i++) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, permissions, 100);
+                requestPermissions.add(permissions[i]);
             }
+        }
+        if (!requestPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(MainActivity.this, requestPermissions.toArray(new String[requestPermissions.size()]), 100);
         }
     }
 
@@ -107,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
             }
+            Utils.createFile(Utils.PICTURE_PATH);
             Log.d(TAG, "权限已授权");
         }
     }
@@ -119,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == 1024) {
             if (Environment.isExternalStorageManager()) {
                 Log.d(TAG, "文件读写权限授权成功！");
+                Utils.createFile(Utils.PICTURE_PATH);
             } else {
                 Log.d(TAG, "文件读写权限授权失败");
             }

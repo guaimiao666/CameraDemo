@@ -330,14 +330,16 @@ public class Camera2Manager {
             } catch (CameraAccessException e) {
                 throw new RuntimeException(e);
             }
-
-            if (cameraDevice != null) {
-                cameraDevice.close();
-                cameraDevice = null;
-            }
-
-            surfaceHolder = null;
-            stopBackgroundThread();
         }
+        if (takePictureImageReader != null) {
+            takePictureImageReader.close();
+            takePictureImageReader = null;
+        }
+        if (cameraDevice != null) {
+            cameraDevice.close();
+            cameraDevice = null;
+        }
+        surfaceHolder = null;
+        stopBackgroundThread();
     }
 }

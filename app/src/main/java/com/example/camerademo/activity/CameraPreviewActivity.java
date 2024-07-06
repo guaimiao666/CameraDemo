@@ -53,12 +53,6 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
             @Override
             public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
                 Log.d(TAG, "surfaceCreated");
-
-            }
-
-            @Override
-            public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-                Log.d(TAG, "surfaceChanged");
                 if (application.getCameraMode() == 0) {
                     if (Camera1Manager.getInstance().openCamera()) {
                         Camera1Manager.getInstance().startPreview(surfaceHolder);
@@ -69,6 +63,11 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
                         Camera2Manager.getInstance().openCamera();
                     }
                 }
+            }
+
+            @Override
+            public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+                Log.d(TAG, "surfaceChanged");
             }
 
             @Override
